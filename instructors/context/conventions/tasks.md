@@ -27,6 +27,8 @@
   - [4.20. Controlled task environment](#420-controlled-task-environment)
   - [4.21. Autochecker-verifiable outcomes](#421-autochecker-verifiable-outcomes)
   - [4.22. Separate-commits constraint](#422-separate-commits-constraint)
+  - [4.23. Autochecker step at task end](#423-autochecker-step-at-task-end)
+  - [4.24. AI curation annotation format](#424-ai-curation-annotation-format)
 - [5. Conceptual review dimensions](#5-conceptual-review-dimensions)
   - [5.1. D1. Learning objective clarity](#51-d1-learning-objective-clarity)
   - [5.2. D2. Step-by-step completeness](#52-d2-step-by-step-completeness)
@@ -107,6 +109,10 @@ Title: `[Task] <Task title>`
 1. [Create a PR](../git-workflow.md#create-a-pr) with your changes.
 2. [Get a PR review](../git-workflow.md#get-a-pr-review) and complete the subsequent steps in the `Git workflow`.
 
+### 1.(N+1). Check the task using the autochecker
+
+[Check the task using the autochecker `Telegram` bot](../../../wiki/autochecker.md#check-the-task-using-the-autochecker-bot).
+
 ---
 
 ## 2. Acceptance criteria
@@ -146,6 +152,7 @@ Common types:
 - `fix:` — bug fixes
 - `feat:` — new features or additions
 - `docs:` — documentation changes
+- `test:` — adding or updating tests (e.g., AI-curated test files)
 
 When a task specifies a commit message, provide it in a code block:
 
@@ -493,6 +500,48 @@ Add a matching acceptance criterion:
 
 This pairs with [Multi-bug debugging tasks](#417-multi-bug-debugging-tasks): when multiple bugs are spread across parts, the commit history must reflect each fix independently so reviewers and the autochecker can attribute each change to the correct part.
 
+### 4.23. Autochecker step at task end
+
+Every task must end with a step titled "Check the task using the autochecker" as the final step before the `## 2. Acceptance criteria` section. The step contains a single instruction:
+
+```markdown
+[Check the task using the autochecker `Telegram` bot](../../../wiki/autochecker.md#check-the-task-using-the-autochecker-bot).
+```
+
+This step is always present regardless of the [task ending type](#411-three-kinds-of-task-endings) — whether the task ends with a PR, a closed issue, or a committed deliverable file.
+
+### 4.24. AI curation annotation format
+
+When a task requires students to generate code using an AI agent and then review the output, require them to annotate each generated item with one of three decision labels placed as a comment on the line immediately above the item:
+
+- `# KEPT:` — included as-is; the comment briefly states what the item covers or why it adds value.
+- `# FIXED:` — modified before inclusion; the comment describes what was changed and why.
+- `# DISCARDED:` — rejected; leave the item commented out in the file, with the label and reason on the line above the commented-out block.
+
+Example (Python):
+
+```python
+# KEPT: covers the empty-list edge case, not tested elsewhere
+def test_filter_returns_empty_list_when_no_interactions() -> None:
+    ...
+
+# FIXED: renamed to match project naming convention; corrected assertion to use == not is
+def test_filter_includes_recent_interaction() -> None:
+    ...
+
+# DISCARDED: duplicates test_filter_includes_interaction_at_boundary
+# def test_filter_boundary_duplicate() -> None:
+#     ...
+```
+
+Key rules:
+
+- Every AI-generated item must carry exactly one label. Unlabeled items are not accepted.
+- `DISCARDED` items remain in the file in commented-out form so reviewers can see what was evaluated and rejected.
+- Require at least one `DISCARDED` item as evidence the student critically evaluated the output rather than accepted everything blindly.
+- Use `test:` as the commit type when committing AI-curated tests (see [Commit message format](#2-commit-message-format)).
+- Pair with [Controlled task environment](#420-controlled-task-environment): provide an exact prompt or a template with `<placeholders>` so the AI interaction is reproducible.
+
 ---
 
 ## 5. Conceptual review dimensions
@@ -587,13 +636,14 @@ See [Notes explain "why"](#410-notes-explain-why).
 
 ### 5.11. D11. Controlled AI steps
 
-See [Controlled task environment](#420-controlled-task-environment).
+See [Controlled task environment](#420-controlled-task-environment) and [AI curation annotation format](#424-ai-curation-annotation-format).
 
 When a task includes AI-assisted steps:
 
 - Is the prompt exact or templated with `<placeholders>`?
 - Is there a checkpoint specifying what correct AI output looks like or how to verify it?
 - If AI output is variable, is there a concrete acceptance criterion the student must satisfy?
+- If the task asks students to curate AI-generated code: are the three annotation labels (`KEPT`, `FIXED`, `DISCARDED`) specified, and is at least one `DISCARDED` item required?
 
 ### 5.12. D12. Autochecker verifiability
 
@@ -656,6 +706,7 @@ See [Autochecker-verifiable outcomes](#421-autochecker-verifiable-outcomes).
 - [ ] `Git workflow` is referenced from tasks that produce code changes.
 - [ ] Acceptance criteria are concrete and verifiable.
 - [ ] Every acceptance criterion maps to an autochecker-verifiable condition (repository state, VM state, or file content).
+- [ ] The last step before `## 2. Acceptance criteria` is "Check the task using the autochecker".
 - [ ] Commit message format is documented (conventional commits).
 - [ ] Setup instructions cover: fork, clone, install tools, configure environment.
 - [ ] Branch protection rules are documented.
@@ -673,5 +724,6 @@ See [Autochecker-verifiable outcomes](#421-autochecker-verifiable-outcomes).
 - [ ] Seed project has three tiers: reference (working), debug (commented out with bugs), implement (placeholder templates) (if the lab uses the seed project pattern).
 - [ ] Placeholder templates include `# Reference:` comments mapping new resources to reference counterparts (if the lab uses placeholder-based implementation).
 - [ ] All tasks are completable without LLMs, unless the task explicitly states that students must use an AI.
+- [ ] AI curation steps specify the three annotation labels (`KEPT`, `FIXED`, `DISCARDED`), require at least one `DISCARDED` item, and use `test:` as the commit type (if the task requires AI-generated code curation).
 - [ ] Docker images use an institutional container registry (if the lab uses Docker in an institutional setting).
 - [ ] API key or auth mechanism is set via environment variable and encountered naturally during exploration (if the lab includes security).
