@@ -17,6 +17,8 @@
   - [Open the `Command Palette`](#open-the-command-palette)
   - [Run a command using the `Command Palette`](#run-a-command-using-the-command-palette)
   - [Select an option from a list](#select-an-option-from-a-list)
+- [`Quick Open`](#quick-open)
+  - [Open the `Quick Open`](#open-the-quick-open)
 - [`Panel Toolbar`](#panel-toolbar)
 - [`VS Code Terminal`](#vs-code-terminal)
   - [Open the `VS Code Terminal`](#open-the-vs-code-terminal)
@@ -209,6 +211,18 @@ Method 2:
 
 1. Change the highlighted option using `UpArrow` and `DownArrow` on your keyboard.
 2. Press `Enter` to confirm the option.
+
+## `Quick Open`
+
+Open a file.
+
+Actions:
+
+- [Open the `Quick Open`](#open-the-quick-open)
+
+### Open the `Quick Open`
+
+1. Press `Ctrl+P` (`Cmd+P` on `macOS`).
 
 ## `Panel Toolbar`
 
