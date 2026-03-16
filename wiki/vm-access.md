@@ -20,7 +20,6 @@
 - [Update the `SSH` config (LOCAL)](#update-the-ssh-config-local)
 - [Restart `sshd` (REMOTE)](#restart-sshd-remote)
 - [Verify you can connect as the user `<user>` (LOCAL)](#verify-you-can-connect-as-the-user-user-local)
-- [Add the `SSH` public key for the `Autochecker` agent (REMOTE)](#add-the-ssh-public-key-for-the-autochecker-agent-remote)
 - [Troubleshooting](#troubleshooting)
   - [`Permission denied (publickey)`](#permission-denied-publickey)
   - [`Bad owner or permissions`](#bad-owner-or-permissions)
@@ -53,7 +52,6 @@ Complete these steps:
 8. [Harden the `SSH` config (REMOTE)](#harden-the-ssh-config-remote)
 9. [Update the `SSH` config (LOCAL)](#update-the-ssh-config-local)
 10. [Restart `sshd` (REMOTE)](#restart-sshd-remote)
-11. [Add the `SSH` public key for the `Autochecker` agent (REMOTE)](#add-the-ssh-public-key-for-the-autochecker-agent-remote)
 
 ## Set up `SSH` (LOCAL)
 
@@ -462,52 +460,6 @@ Complete these steps:
 <!-- TODO where should this important alert be moved? -->
 > [!IMPORTANT]
 > Keep your current `SSH` session open until you confirm the new connection works. If the new connection fails, use the existing session to fix the config.
-
-## Add the `SSH` public key for the `Autochecker` agent (REMOTE)
-
-> [!NOTE]
-> Replace [`<user>`](./operating-system.md#user-placeholder) with the actual [username](./operating-system.md#username).
->
-> Add the [`SSH` public key](./ssh.md#ssh-public-key) for [the `Autochecker` agent](./autochecker.md#the-autochecker-agent) so that it can connect to your VM as the user `<user>`
-> to have access to files owned by you.
-
-1. [Connect to your VM as the user `<user>`](#connect-to-your-vm-by-ssh-as-the-user-user-local) if not yet connected.
-
-2. To check whether the public `SSH` key is already present,
-
-   [run in the `VS Code Terminal`](./vs-code.md#run-a-command-in-the-vs-code-terminal):
-
-   ```terminal
-   grep se-toolkit-autochecker ~/.ssh/authorized_keys
-   ```
-
-   Skip the following steps in this section if you see:
-
-   ```terminal
-   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKiL0DDQZw7L0Uf1c9cNlREY7IS6ZkIbGVWNsClqGNCZ se-toolkit-autochecker
-   ```
-
-3. To add the `SSH` public key,
-
-   [run in the `VS Code Terminal`](./vs-code.md#run-a-command-in-the-vs-code-terminal):
-
-   ```terminal
-   echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKiL0DDQZw7L0Uf1c9cNlREY7IS6ZkIbGVWNsClqGNCZ se-toolkit-autochecker" >> ~/.ssh/authorized_keys
-   ```
-
-4. To verify the `SSH` public key was added,
-
-   [run in the `VS Code Terminal`](./vs-code.md#run-a-command-in-the-vs-code-terminal):
-
-   ```terminal
-   grep se-toolkit-autochecker ~/.ssh/authorized_keys
-   ```
-
-   You should see:
-
-   ```terminal
-   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKiL0DDQZw7L0Uf1c9cNlREY7IS6ZkIbGVWNsClqGNCZ se-toolkit-autochecker
-   ```
 
 ## Troubleshooting
 
