@@ -533,7 +533,7 @@ Option 1: Remove it.
 
       Replace the placeholder [`<directory-path>`](./file-system.md#directory-path-placeholder) with the path from the error message (without `<` and `>`).
 
-   2. [Type the password for the user `<user>`](./vm-access.md#type-the-password-for-the-user-user-remote).
+   2. [Type the password](./shell.md#type-the-password-for-the-user).
 
 2. Clone again.
 

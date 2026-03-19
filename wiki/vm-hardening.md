@@ -66,7 +66,7 @@ Complete these steps:
       sudo ufw allow 22
       ```
 
-   2. [Type the password for the user `<user>`](./vm-access.md#type-the-password-for-the-user-user-remote).
+   2. [Type the password for the user `<user>`](./shell.md#type-the-password-for-the-user).
 
    The output should look like this:
 
@@ -236,7 +236,7 @@ Complete these steps:
       sudo ufw disable
       ```
 
-   2. [Type the password for the user `<user>`](./vm-access.md#type-the-password-for-the-user-user-remote).
+   2. [Type the password for the user `<user>`](./shell.md#type-the-password-for-the-user).
   
    The output should look like this:
 
