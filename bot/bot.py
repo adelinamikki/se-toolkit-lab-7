@@ -3,7 +3,7 @@ import sys
 
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from config import BotConfig
 from handlers.default import (
@@ -50,6 +50,19 @@ def create_dispatcher() -> Dispatcher:
     @dispatcher.message(CommandStart())
     async def start_command(message: Message) -> None:
         await message.answer(handle_start(), reply_markup=build_start_keyboard())
+
+    @dispatcher.callback_query()
+    async def prompt_button(callback: CallbackQuery) -> None:
+        data = callback.data or ""
+        if not data.startswith("prompt:"):
+            await callback.answer()
+            return
+
+        prompt = data.removeprefix("prompt:")
+        response_text = IntentRouter(BotConfig()).route(prompt)
+        if callback.message is not None:
+            await callback.message.answer(response_text, reply_markup=build_start_keyboard())
+        await callback.answer()
 
     return dispatcher
 
