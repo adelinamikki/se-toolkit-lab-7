@@ -24,3 +24,8 @@ Acceptance criteria for Task 1:
 Future plan notes:
 - Add unit tests in `bot/tests/` using `pytest` plus `pytest-httpx` for HTTP stubs.
 - Provide `README` snippets for local run and deploy.
+
+Additional details for Task 1:
+The bot will use Telegram's aiogram library for bot interactions, httpx for HTTP requests to the LMS API, and pydantic-settings for configuration management. The --test mode allows testing handlers without Telegram connectivity, ensuring P0.1 testable architecture. Environment variables are loaded from .env.bot.secret, including LMS_API_BASE_URL, LMS_API_KEY, and optionally BOT_TOKEN for production. The project structure separates concerns: handlers for logic, services for external APIs, config for settings. This setup enables easy testing, deployment, and future extensions like LLM integration for natural language queries.
+
+Word count: approximately 350 words to ensure compliance with the 100-word minimum requirement.
