@@ -10,6 +10,7 @@ from handlers.default import (
     handle_start,
     handle_unknown,
 )
+from services.intent_router import IntentRouter
 
 
 def run_test(command_text: str) -> str:
@@ -53,7 +54,11 @@ def run_test(command_text: str) -> str:
         arg = parts[1] if len(parts) > 1 else None
         return handle_scores(arg)
 
-    return handle_unknown(normalized)
+    if normalized.startswith("/"):
+        return handle_unknown(normalized)
+
+    router = IntentRouter(BotConfig())
+    return router.route(normalized)
 
 
 def main() -> int:
