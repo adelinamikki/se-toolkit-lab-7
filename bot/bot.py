@@ -1,0 +1,75 @@
+import argparse
+import sys
+
+from config import BotConfig
+from handlers.default import (
+    handle_help,
+    handle_health,
+    handle_labs,
+    handle_scores,
+    handle_start,
+    handle_unknown,
+)
+
+
+def run_test(command_text: str) -> str:
+    """Run a command in test mode.
+    
+    Args:
+        command_text: The command string (e.g., "/start", "/scores lab-04")
+    
+    Returns:
+        The handler output as a string.
+    """
+    normalized = command_text.strip()
+
+    # Git Bash / MSYS path conversion can turn "/start" into a Windows path.
+    if ":\\" in normalized or normalized.lower().startswith("c:/"):
+        basename = normalized.replace("\\", "/").split("/")[-1]
+        if basename in {"start", "help", "health", "labs", "scores"}:
+            normalized = "/" + basename
+
+    if normalized.startswith("/start"):
+        return handle_start()
+    if normalized.startswith("/help"):
+        return handle_help()
+    if normalized.startswith("/health"):
+        return handle_health()
+    if normalized.startswith("/labs"):
+        return handle_labs()
+    if normalized.startswith("/scores"):
+        parts = normalized.split(maxsplit=1)
+        arg = parts[1] if len(parts) > 1 else None
+        return handle_scores(arg)
+
+    return handle_unknown(normalized)
+
+
+def main() -> int:
+    """Entry point.
+    
+    Supports --test mode for local testing without Telegram transport.
+    """
+    parser = argparse.ArgumentParser(description="LMS Telegram bot runner")
+    parser.add_argument("--test", dest="test_text", help="Run in test mode with given command text")
+    args = parser.parse_args()
+
+    config = BotConfig()  # loads .env.bot.secret by default
+
+    if args.test_text is None:
+        print("Telegram transport is not implemented in this scaffold yet.")
+        print("Use --test '/start' to run handlers locally.")
+        return 0
+
+    # Test mode
+    try:
+        output = run_test(args.test_text)
+        print(output)
+        return 0
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
