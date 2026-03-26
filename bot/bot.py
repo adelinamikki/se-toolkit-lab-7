@@ -13,6 +13,14 @@ from handlers.default import (
 
 
 def run_test(command_text: str) -> str:
+    """Run a command in test mode.
+
+    Args:
+        command_text: The command string (e.g., "/start", "/scores lab-04")
+
+    Returns:
+        The handler output as a string.
+    """
     normalized = command_text.strip()
 
     # Git Bash / MSYS path conversion can turn "/start" into a Windows path.
@@ -38,6 +46,10 @@ def run_test(command_text: str) -> str:
 
 
 def main() -> int:
+    """Entry point.
+
+    Supports --test mode for local testing without Telegram transport.
+    """
     parser = argparse.ArgumentParser(description="LMS Telegram bot runner")
     parser.add_argument("--test", dest="test_text", help="Run in test mode with given command text")
     args = parser.parse_args()
