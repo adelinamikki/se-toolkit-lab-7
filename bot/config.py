@@ -12,5 +12,9 @@ class BotConfig(BaseSettings):
     LLM_API_MODEL: Optional[str] = None
 
     class Config:
+<<<<<<< HEAD
         env_file = "../.env.bot.secret"
+=======
+        env_file = ".env.bot.secret"
+>>>>>>> d8e6be9aa8cbc10d1f3c49af314f4d1f6eb451b5
         env_file_encoding = "utf-8"

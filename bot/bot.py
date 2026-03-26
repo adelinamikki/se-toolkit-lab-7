@@ -13,6 +13,7 @@ from handlers.default import (
 
 
 def run_test(command_text: str) -> str:
+<<<<<<< HEAD
     """Run a command in test mode.
     
     Args:
@@ -21,6 +22,8 @@ def run_test(command_text: str) -> str:
     Returns:
         The handler output as a string.
     """
+=======
+>>>>>>> d8e6be9aa8cbc10d1f3c49af314f4d1f6eb451b5
     normalized = command_text.strip()
 
     # Git Bash / MSYS path conversion can turn "/start" into a Windows path.
@@ -46,10 +49,13 @@ def run_test(command_text: str) -> str:
 
 
 def main() -> int:
+<<<<<<< HEAD
     """Entry point.
     
     Supports --test mode for local testing without Telegram transport.
     """
+=======
+>>>>>>> d8e6be9aa8cbc10d1f3c49af314f4d1f6eb451b5
     parser = argparse.ArgumentParser(description="LMS Telegram bot runner")
     parser.add_argument("--test", dest="test_text", help="Run in test mode with given command text")
     args = parser.parse_args()
@@ -61,6 +67,7 @@ def main() -> int:
         print("Use --test '/start' to run handlers locally.")
         return 0
 
+<<<<<<< HEAD
     # Test mode
     try:
         output = run_test(args.test_text)
@@ -69,6 +76,13 @@ def main() -> int:
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
+=======
+    # The P0 requirement says test mode should work without BOT_TOKEN
+    # so we do not validate BOT_TOKEN here.
+    output = run_test(args.test_text)
+    print(output)
+    return 0
+>>>>>>> d8e6be9aa8cbc10d1f3c49af314f4d1f6eb451b5
 
 
 if __name__ == "__main__":
