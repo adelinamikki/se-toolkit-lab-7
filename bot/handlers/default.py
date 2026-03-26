@@ -43,13 +43,18 @@ def handle_labs() -> str:
     if items is None:
         return client.get_last_error()
 
-    labs = [item for item in items if item.get("type") == "lab"]
+    labs = [
+        item
+        for item in items
+        if item.get("type") == "lab"
+        or str(item.get("title", "")).strip().lower().startswith("lab ")
+    ]
 
     if not labs:
         return "No labs found in the backend."
 
     lines = ["Available labs:"]
-    for lab in labs:
+    for lab in sorted(labs, key=lambda item: str(item.get("title", ""))):
         title = lab.get("title", "Unknown")
         lines.append(f"- {title}")
 
@@ -71,14 +76,22 @@ def handle_scores(argument: Optional[str] = None) -> str:
     if not pass_rates:
         return f"No data found for lab {argument}."
 
-    lines = [f"Pass rates for {argument}:"]
-    for task_name, rate_info in pass_rates.items():
-        if isinstance(rate_info, dict):
-            rate = rate_info.get("pass_rate", 0)
-            attempts = rate_info.get("attempts", 0)
-            lines.append(f"- {task_name}: {rate:.1f}% ({attempts} attempts)")
-        else:
-            lines.append(f"- {task_name}: {rate_info}")
+    lab_label = argument.replace("lab-", "").strip()
+    if lab_label.isdigit():
+        heading = f"Pass rates for Lab {lab_label.zfill(2)}:"
+    else:
+        heading = f"Pass rates for {argument}:"
+
+    lines = [heading]
+    for item in pass_rates:
+        if not isinstance(item, dict):
+            lines.append(f"- {item}")
+            continue
+
+        task_name = str(item.get("task", "Unknown task"))
+        avg_score = float(item.get("avg_score", 0.0))
+        attempts = int(item.get("attempts", 0))
+        lines.append(f"- {task_name}: {avg_score:.1f}% ({attempts} attempts)")
 
     return "\n".join(lines)
 
