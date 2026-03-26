@@ -59,7 +59,7 @@ class LMSClient:
             List of items, or None if an error occurs.
         """
         try:
-            with httpx.Client() as client:
+            with httpx.Client(trust_env=False) as client:
                 response = client.get(
                     f"{self.base_url}/items/",
                     headers=self._headers(),
@@ -71,7 +71,7 @@ class LMSClient:
             self._format_error(e)
             return None
 
-    def get_pass_rates(self, lab_id: str) -> Optional[dict[str, Any]]:
+    def get_pass_rates(self, lab_id: str) -> Optional[list[dict[str, Any]]]:
         """Fetch per-task pass rates for a lab.
         
         Args:
@@ -81,7 +81,7 @@ class LMSClient:
             Pass rate data, or None if an error occurs.
         """
         try:
-            with httpx.Client() as client:
+            with httpx.Client(trust_env=False) as client:
                 response = client.get(
                     f"{self.base_url}/analytics/pass-rates",
                     params={"lab": lab_id},

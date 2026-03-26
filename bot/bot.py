@@ -25,9 +25,20 @@ def run_test(command_text: str) -> str:
 
     # Git Bash / MSYS path conversion can turn "/start" into a Windows path.
     if ":\\" in normalized or normalized.lower().startswith("c:/"):
-        basename = normalized.replace("\\", "/").split("/")[-1]
-        if basename in {"start", "help", "health", "labs", "scores"}:
-            normalized = "/" + basename
+        normalized_path = normalized.replace("\\", "/")
+        marker = "/Program Files/Git/"
+        if marker in normalized_path:
+            suffix = normalized_path.split(marker, maxsplit=1)[1]
+            parts = suffix.split(maxsplit=1)
+            basename = parts[0]
+            if basename in {"start", "help", "health", "labs", "scores"}:
+                normalized = "/" + basename
+                if len(parts) > 1:
+                    normalized += " " + parts[1]
+        else:
+            basename = normalized_path.split("/")[-1]
+            if basename in {"start", "help", "health", "labs", "scores"}:
+                normalized = "/" + basename
 
     if normalized.startswith("/start"):
         return handle_start()
