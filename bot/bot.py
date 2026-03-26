@@ -1,6 +1,10 @@
 import argparse
 import sys
 
+from aiogram import Bot, Dispatcher
+from aiogram.filters import CommandStart
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+
 from config import BotConfig
 from handlers.default import (
     handle_help,
@@ -11,6 +15,43 @@ from handlers.default import (
     handle_unknown,
 )
 from services.intent_router import IntentRouter
+
+
+def build_start_keyboard() -> InlineKeyboardMarkup:
+    """Keyboard with common natural-language prompts for Telegram users."""
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="Available labs",
+                    callback_data="prompt:what labs are available?",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Lab 4 scores",
+                    callback_data="prompt:show me scores for lab 4",
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Lowest pass rate",
+                    callback_data="prompt:which lab has the lowest pass rate?",
+                )
+            ],
+        ]
+    )
+
+
+def create_dispatcher() -> Dispatcher:
+    """Create Telegram dispatcher with a minimal /start handler."""
+    dispatcher = Dispatcher()
+
+    @dispatcher.message(CommandStart())
+    async def start_command(message: Message) -> None:
+        await message.answer(handle_start(), reply_markup=build_start_keyboard())
+
+    return dispatcher
 
 
 def run_test(command_text: str) -> str:
@@ -73,6 +114,9 @@ def main() -> int:
     config = BotConfig()  # loads .env.bot.secret by default
 
     if args.test_text is None:
+        if config.BOT_TOKEN:
+            Bot(token=config.BOT_TOKEN)
+            create_dispatcher()
         print("Telegram transport is not implemented in this scaffold yet.")
         print("Use --test '/start' to run handlers locally.")
         return 0
